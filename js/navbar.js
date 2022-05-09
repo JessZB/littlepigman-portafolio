@@ -36,7 +36,6 @@ window.addEventListener('resize', () => {
     nav_menu.classList.remove('active');
     buttondiv.classList.remove('active');
     if (window.screenX < 750) nav_menu.classList.remove('sticky-menu');
-    else console.log("hi!");
 
     changeIcon();
 

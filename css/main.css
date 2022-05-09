@@ -37,7 +37,7 @@ body {
 /* CABECERA */
 
 .header {
-    height: 95vh;
+    height: 100vh;
     max-height: 800px;
     display: flex;
     flex-direction: column;
@@ -110,6 +110,11 @@ section {
     border-radius: 5px;
 }
 
+.section-separator{
+    opacity: 0;
+    margin-bottom: 50px;
+}
+
 section h2 {
     font-size: 1.5rem;
 }
@@ -169,7 +174,7 @@ section p {
 .article-works:hover {
     -webkit-box-shadow: 0px 0px 21px 2px var(--color3);
     box-shadow: 0px 0px 21px 2px var(--color3);
-    transform: scale(1.05);
+    transform: scale(1);
 }
 
 /* .article__works-div2 {} */
@@ -408,7 +413,7 @@ section p {
     gap: 5px;
     width: 60%;
     height: auto;
-    background-color: #4d3f912f;
+    background-color: #5c23e23b;
     transition: background .2s ease;
 }
 
@@ -459,14 +464,14 @@ section p {
     transform: scale(1);
     transition: all 0.2s ease;
     margin-bottom: 10px;
-    -webkit-box-shadow: 0px 0px 21px 2px var(--color1);
-    box-shadow: 0px 0px 21px 2px var(--color1);
+    /* -webkit-box-shadow: 0px 0px 21px 2px var(--color1);
+    box-shadow: 0px 0px 21px 2px var(--color1); */
 }
 
 .projects-info:hover .article__projects-img {
     transform: scale(1.05);
-    -webkit-box-shadow: 0px 0px 21px 2px var(--color3);
-    box-shadow: 0px 0px 21px 2px var(--color3);
+    /* -webkit-box-shadow: 0px 0px 21px 2px var(--color3);
+    box-shadow: 0px 0px 21px 2px var(--color3); */
 }
 
 .article__projects-a {
