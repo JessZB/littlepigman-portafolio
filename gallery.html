@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="css/gallery.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/normalize.css">
 
     <!-- LIGHTBOX -->
@@ -18,32 +19,41 @@
     <!-- ICON -->
     <link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="icons/iconpack2/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
+
+    <!-- NAV - FOOTER -->
+    <script src="js/include-html.js"></script>
 </head>
 
 <body>
     <nav class="nav-menu">
-        <div class="activate-menu"><i class="icon-list activate__menu-i"></i></div>
+
+        <!-- Action Buttons -->
+        <button class="activate-menu">
+            <i class="activate__menu-i fa-solid fa-bars"></i>
+        </button>
+        <button class="up-btn">
+            <i class="open_button-icon fa-solid fa-arrow-up"></i>
+        </button>
+    
         <div class="nav__menu-header">
             <img src="img/icon.png" alt="">
         </div>
         <ul class="nav-ul">
             <li class="nav-li">
-                <a href="index.html" class="nav-link">BACK</a>
+                <a href="index.html" class="nav-link">PORTFOLIO</a>
             </li>
             <li class="nav-li">
-                <a href="#pixelarts" class="nav-link">PIXEL ARTS</a>
+                <a href="#pixelarts" class="nav-link">PIXELARTS</a>
             </li>
             <li class="nav-li">
                 <a href="#animations" class="nav-link">ANIMATIONS</a>
-            </li>
-            <li class="nav-li">
-                <a href="#" class="nav-link">OTHERS</a>
             </li>
         </ul>
         <div class="nav__menu-footer">
@@ -69,16 +79,15 @@
         </header>
 
         <section id="pixelarts" class="pixelarts">
+
             <div class="gallery-tittle">
                 <h2 class="gallery__tittle-h2">PIXEL ARTS</h2>
             </div>
             <div class="grid-container">
                 <div class="grid-item">
                     <div class="grid__img-container">
-                        <a href="img/pixelarts/MayHD.png" data-title="May - Guardian Tales"
-                            data-lightbox="roadtrip">
-                            <img class="grid-img" src="img/pixelarts/MayHD.png" width="200" height="300"
-                                alt=" GT">
+                        <a href="img/pixelarts/MayHD.png" data-title="May - Guardian Tales" data-lightbox="roadtrip">
+                            <img class="grid-img" src="img/pixelarts/MayHD.png" width="200" height="300" alt=" GT">
                         </a>
                     </div>
                 </div>
@@ -134,8 +143,7 @@
                     <div class="grid__img-container">
                         <a href="img/pixelarts/2B_back2.png" data-title="2B Back2 - Nier Automata"
                             data-lightbox="roadtrip">
-                            <img class="grid-img" src="img/pixelarts/2B_back2.png" width="200" height="200"
-                                alt="2B">
+                            <img class="grid-img" src="img/pixelarts/2B_back2.png" width="200" height="200" alt="2B">
                         </a>
                     </div>
                 </div>
@@ -165,8 +173,7 @@
                 </div>
                 <div class="grid-item">
                     <div class="grid__img-container">
-                        <a href="img/pixelarts/Unicorn.png" data-title="Unicorn Girl!"
-                            data-lightbox="roadtrip">
+                        <a href="img/pixelarts/Unicorn.png" data-title="Unicorn Girl!" data-lightbox="roadtrip">
                             <img class="grid-img" src="img/pixelarts/Unicorn.png" width="200" height="200"
                                 alt="Unicorn Girl">
                         </a>
@@ -174,10 +181,8 @@
                 </div>
                 <div class="grid-item">
                     <div class="grid__img-container">
-                        <a href="img/pixelarts/jhojan.png" data-title=" - Guardian Tales"
-                            data-lightbox="roadtrip">
-                            <img class="grid-img" src="img/pixelarts/jhojan.png" width="200" height="300"
-                                alt=" GT">
+                        <a href="img/pixelarts/jhojan.png" data-title=" - Guardian Tales" data-lightbox="roadtrip">
+                            <img class="grid-img" src="img/pixelarts/jhojan.png" width="200" height="300" alt=" GT">
                         </a>
                     </div>
                 </div>
@@ -185,15 +190,13 @@
                     <div class="grid__img-container">
                         <a href="img/pixelarts/Ursnac.png" data-title="Ursnac - Loomian Legacy "
                             data-lightbox="roadtrip">
-                            <img class="grid-img" src="img/pixelarts/Ursnac.png" width="200" height="200"
-                                alt="Ursnac">
+                            <img class="grid-img" src="img/pixelarts/Ursnac.png" width="200" height="200" alt="Ursnac">
                         </a>
                     </div>
                 </div>
                 <div class="grid-item">
                     <div class="grid__img-container">
-                        <a href="img/pixelarts/Asta.png" data-title="Asta - Black Clover"
-                            data-lightbox="roadtrip">
+                        <a href="img/pixelarts/Asta.png" data-title="Asta - Black Clover" data-lightbox="roadtrip">
                             <img class="grid-img" src="img/pixelarts/Asta.png" width="200" height="300"
                                 alt="Asta - Black Clover">
                         </a>
@@ -228,27 +231,28 @@
                 </div>
                 <div class="grid-item">
                     <div class="grid__img-container">
-                        <a href="img/pixelarts/LeBarri_Emote.gif" data-title="LeBarri - Emote" data-lightbox="animations">
-                            <img class="grid-img" src="img/gifts/LeBarri_Emote.gif" width="250" height="300" alt="LeBarry">
+                        <a href="img/pixelarts/LeBarri_Emote.gif" data-title="LeBarri - Emote"
+                            data-lightbox="animations">
+                            <img class="grid-img" src="img/gifts/LeBarri_Emote.gif" width="250" height="300"
+                                alt="LeBarry">
                         </a>
                     </div>
                 </div>
-                
+
             </div>
         </section>
 
     </div>
+    <div data-include="sections/footer.html"></div>
 
     <!-- NAVIGATION -->
-    <script src="js/navbar.js"></script>
-
+    <script type="module" src="app.js"></script>
     <!-- Gallery -->
-    <script src="js/masonry-docs.min.js"></script>
-    <script src="js/gallery-1.js"></script>
-    <script src="js/gallery-2.js"></script>
+    <script src="js/gallery/masonry-docs.min.js"></script>
+    <script src="js/gallery/galleryMsnry.js"></script>
 
     <!-- Img selection -->
-    <script src="js/lightbox-plus-jquery.min.js"></script>
+    <script src="js/gallery/lightbox-plus-jquery.min.js"></script>
 
     <script>
         lightbox.option({
@@ -259,7 +263,7 @@
             "wrapAround": true,
         });
     </script>
-    <script src="js/lightbox.min.js"></script>
+    <script src="js//gallery/lightbox.min.js"></script>
 
 
 </body>
