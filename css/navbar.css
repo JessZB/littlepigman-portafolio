@@ -23,7 +23,7 @@
 
 .nav-menu {
     top: 0;
-    height: 50px;
+    height: auto;
     background-color: #4d3f9136;
     display: flex;
     align-items: center;
@@ -47,7 +47,16 @@
     letter-spacing: 2px;
     transition: color .2s ease;
     padding: 20px 10px;
-    font-size: 16px;
+    font-size: .8rem;
+    height: 100px;
+    
+}
+.nav-link-img{
+    vertical-align:bottom;
+    max-width: 025px;
+    /* object-fit: contain; */
+    height: 100%;
+    /* transform: scale(2), translateX(-50%); */
 }
 
 .nav-link:hover {
@@ -98,15 +107,15 @@
 .nav-menu.sticky-menu .nav-link {
     padding: 20px 20px;
     text-decoration: none;
+    font-size: 1rem;
     color: var(--font-color2);
     letter-spacing: 4px;
     position: relative;
-    transition: all .2s ease;
+    transition: background .2s ease, .2s ease;
 }
 
 .nav-menu.sticky-menu .nav-link:hover {
     background-color: var(--color5);
-    padding: 22px 20px;
 }
 
 .activate-menu {

@@ -2,7 +2,7 @@
     background-color: var(--color00);
     color: var(--color4);
     padding: 2rem 1rem;
-    min-height: 30vh;
+    min-height: 200px;
     text-align: center;
     display: flex;
     flex-direction: column;
