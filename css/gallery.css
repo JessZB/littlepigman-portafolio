@@ -1,39 +1,6 @@
 @import "/css/navbar.css";
 @import "/css/footer.css";
 
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-}
-
-html{
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-
-}
-
-:root {
-    --works-color: #09000c;
-    --skills-color: #02021c;
-    --color00: #1c0217;
-    --color1: #4C3F91;
-    --color2: #9145B6;
-    --color3: #B958A5;
-    --color4: #FF5677;
-    --color5: #311c48;
-    --color6: rgb(255, 234, 0);
-    --color7: #1c3148;
-    --font-color: rgb(68, 68, 68);
-    --font-color2: #fff;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--color5);
-    overflow-x: hidden;
-}
-
 .container {
     height: 100%;
     width: 100%;
@@ -168,7 +135,7 @@ body {
     color: var(--font-color2);
     border-radius: 10px;
     transition: background-color .2s ease;
-    font-size: 16px;
+    font-size: 2rem;
 }
 
 .header a:hover {
@@ -178,7 +145,8 @@ body {
 /* PIXEL ARTS SECTION */
 
 .pixelarts,
-.animations {
+.animations,
+.artworks {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -186,14 +154,14 @@ body {
     padding-top: 5rem;
 }
 
-.pixelarts .gallery-tittle {
+.pixelarts .gallery-tittle, .animations .gallery-tittle, .artworks .gallery-tittle {
     background: url(../img/pixelarts/Dororo.png) top center no-repeat;
     background-size: cover;
     width: 95%;
     margin-top: 20px;
 }
 
-.pixelarts .gallery__tittle-h2 {
+.pixelarts .gallery__tittle-h2, .animations .gallery__tittle-h2, .artworks .gallery__tittle-h2 {
     font-size: 2rem;
     letter-spacing: 2px;
     width: 100%;
@@ -201,25 +169,11 @@ body {
     text-align: end;
     color: var(--font-color2);
     background-color: rgba(0, 8, 34, 0.741);
-
+    font-weight: 400;
 }
 
-/* ANIMATIONS SECTION */
-
-.animations .gallery-tittle {
-    background: url(../img/pixelarts/Dororo.png) top center no-repeat;
-    background-size: cover;
-    width: 95%;
-    margin-top: 20px;
-}
 
 .animations .gallery__tittle-h2 {
-    font-size: 2rem;
-    letter-spacing: 2px;
-    width: 100%;
-    padding: 20px;
-    text-align: right;
-    color: var(--font-color2);
     background-color: rgba(34, 0, 23, 0.741);
 
 }

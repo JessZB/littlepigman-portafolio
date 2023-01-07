@@ -3,20 +3,23 @@ export default function navBar(nav, btn, icon, active) {
   const $navMenu = document.querySelector(nav),
     $menuBtn = document.querySelector(btn),
     $iconBtn = document.querySelector(icon);
+  let openMenu = "icons/menu/menu.svg",
+    closeMenu = "icons/menu/close.svg";
 
-    let openMenu = "fa-bars",
-    closeMenu = "fa-xmark";
-    
-  $menuBtn.addEventListener("click", () => {
-    $navMenu.classList.toggle(active);
-    $menuBtn.classList.toggle(active);
-    
-    if ($iconBtn.classList.contains(openMenu)) {
-      $iconBtn.classList.remove(openMenu);
-      $iconBtn.classList.add(closeMenu);
+  document.addEventListener("click", (e) => {
+    if (e.target.matches(`${btn} > *`)) {
+      $navMenu.classList.toggle(active);
+      $menuBtn.classList.toggle(active);
+
+      if ($menuBtn.classList.contains(active)) {
+        $iconBtn.src = closeMenu;
+      } else {
+        $iconBtn.src = openMenu;
+      }
     } else {
-      $iconBtn.classList.remove(closeMenu);
-      $iconBtn.classList.add(openMenu);
+      $navMenu.classList.remove(active);
+      $menuBtn.classList.remove(active);
+      $iconBtn.src = openMenu;
     }
   });
 
@@ -28,11 +31,8 @@ export default function navBar(nav, btn, icon, active) {
       window.scrollY > 0 && window.innerWidth > 750
     );
     $navMenu.classList.remove(active);
-
     $menuBtn.classList.remove(active);
-    $iconBtn.classList.add(openMenu);
-
-    changeIcon();
+    $iconBtn.src = openMenu;
   });
 
   // resize
@@ -41,13 +41,6 @@ export default function navBar(nav, btn, icon, active) {
     $navMenu.classList.remove(active);
     $menuBtn.classList.remove(active);
     if (window.screenX < 750) $navMenu.classList.remove("sticky-menu");
-
-    changeIcon();
+    $iconBtn.src = openMenu;
   });
-  function changeIcon() {
-    if ($iconBtn.classList.contains(closeMenu))
-      $iconBtn.classList.remove(closeMenu);
-    else $iconBtn.classList.add(openMenu);
-  }
 }
-

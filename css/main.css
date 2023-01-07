@@ -2,37 +2,6 @@
 @import "/css/navbar.css";
 @import "/css/footer.css";
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-:root {
-  --works-color: #09000c;
-  --skills-color: #02021c;
-  --color00: #1c0217;
-  --color1: #4c3f91;
-  --color2: #9145b6;
-  --color3: #b958a5;
-  --color4: #ff5677;
-  --color5: #311c48;
-  --color6: rgb(255, 234, 0);
-  --color7: #1c3148;
-  --font-color: rgb(68, 68, 68);
-  --font-color2: #fff;
-}
-
-body {
-  font-family: "Roboto", sans-serif;
-  overflow-x: hidden;
-}
-
-
 
 .container {
   background: url(../img/background.png) center no-repeat fixed;
@@ -80,6 +49,7 @@ body {
 .header-h2 {
   letter-spacing: 1px;
   font-size: 2rem;
+  font-weight: 400;
 }
 
 .header-p {
@@ -95,7 +65,7 @@ body {
   color: var(--font-color2);
   border-radius: 10px;
   transition: background-color 0.2s ease;
-  font-size: 16px;
+  font-size: 2rem;
 }
 
 .header a:hover {
@@ -119,7 +89,8 @@ section {
 }
 
 section h2 {
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-weight: 400;
 }
 
 section p {
@@ -284,7 +255,8 @@ section p {
 }
 
 .skills-info h2 {
-  color: var(--font-color);
+  color: var(--skills-color);
+  font-weight: 400;
 }
 
 .skills-info:hover h2 {
@@ -296,10 +268,11 @@ section p {
 }
 
 .article__skills-p {
-  font-size: 16px;
+  font-size: 1.2rem;
   padding: 10px 10px;
   text-align: justify;
-  line-height: 1.5;
+  line-height: 1.2;
+  color:var(--font-color);
 }
 
 .skills-info ul {
@@ -470,7 +443,7 @@ section p {
 }
 
 .article__projects-p {
-  font-size: 1rem;
+  font-size: 1.2rem;
   padding: 10px 10px;
   text-align: center;
   line-height: 1.5;
@@ -529,7 +502,6 @@ section p {
 
 .article__about-div-2 > p {
   font-size: 1.5rem;
-  font-weight: bold;
   margin: 0 auto 10px auto;
   padding: 10px 20px;
 }
@@ -565,7 +537,7 @@ section p {
 }
 
 .about-info p {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   line-height: 1.5;
   text-align: justify;
   transition: transform 0.2s ease;
@@ -636,7 +608,6 @@ section p {
 
 .article-contact p {
   opacity: 0;
-  font-weight: bold;
   transition: opacity 0.2s ease, transform 0.2s ease;
   width: 150px;
   text-align: center;
@@ -691,15 +662,10 @@ section p {
   }
 
   .header-p {
-    font-size: 16px;
+    font-size: 1.2rem;
   }
 
   /* ARTICULOS DE TRABAJO */
-
-  .article__works-p,
-  .article__works-a {
-    font-size: 14px;
-  }
 
   .article__works-h2 {
     font-size: 18px;
@@ -748,7 +714,7 @@ section p {
   }
 
   .article__skills-p {
-    font-size: 14px;
+    font-size: 1.2rem;
   }
 
   .skills-img {
@@ -863,7 +829,7 @@ section p {
   }
 
   .about-info p {
-    font-size: 16px;
+    font-size: 1.2rem;
     line-height: 1.5;
   }
 
@@ -891,7 +857,7 @@ section p {
 
   .article-contact p {
     opacity: 1;
-    font-size: 14px;
+    font-size: 1rem;
   }
   .article-contact:hover p {
     transform: none;
