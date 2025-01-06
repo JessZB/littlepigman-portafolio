@@ -1,9 +1,11 @@
-import navBar from "./js/navbar.js";
-import scrollUp from "./js/scrollUp.js";
+import navBar from './js/navbar.js'
+import scrollUp from './js/scrollUp.js'
 
-const d = document;
+const d = document
 
-d.addEventListener('DOMContentLoaded', (e)=>{
-    navBar(".nav-menu", ".activate-menu", ".activate-menu-btn", "active");
-    scrollUp(".up-btn", "activate");
+ping()
+
+d.addEventListener('DOMContentLoaded', (e) => {
+  navBar('.nav-menu', '.activate-menu', '.activate-menu-btn', 'active')
+  scrollUp('.up-btn', 'activate')
 })
