@@ -474,21 +474,6 @@
       </footer>
     </div>
 
-    <script>
-      async function ping() {
-        let res = await fetch('https://sigob.net/api/solicitudes', {
-          method: 'GET',
-          headers: {
-            Authorization: 'asd',
-          },
-        })
-        console.log(res)
-
-        let text = await res.text()
-
-        console.log(text)
-      }
-    </script>
     <script type="module" src="app.js"></script>
   </body>
 </html>
