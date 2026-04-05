@@ -1,0 +1,23 @@
+---
+import { Image } from 'astro:assets';
+interface Props {
+  project: {
+    id: string;
+    title: string;
+    category: string;
+    thumbnail: string;
+  };
+}
+
+const { project } = Astro.props;
+---
+
+<div class="project-card" onclick={`openProject('${project.id}')`}>
+  <Image src={project.thumbnail} alt={project.title} width={400} height={225} class="w-full h-full object-cover" />
+  <div class="project-title-bar">
+    <span class="truncate pr-2">{project.title}</span>
+    <span class="text-[var(--color-accent)] text-xs sm:text-sm border border-[var(--color-accent)] px-1 whitespace-nowrap hidden min-[350px]:block">
+      {project.category}
+    </span>
+  </div>
+</div>
