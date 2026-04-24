@@ -1,13 +1,14 @@
 ---
 interface Props {
   title: string;
+  lang?: string;
 }
 
-const { title } = Astro.props;
+const { title, lang = 'es' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -24,6 +25,7 @@ const { title } = Astro.props;
     />
     <!-- Three.js para el visor 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" is:inline></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" is:inline></script>
 
     <style is:global>
       :root {

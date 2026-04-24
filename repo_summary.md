@@ -1,41 +1,40 @@
-# Resumen del Repositorio: LittlePigman Portfolio
+# Arquitectura de LittlePigman Portfolio CMS
 
-## 1. Resumen General
-Este repositorio contiene el código fuente para el portafolio web personal de **LittlePigman**, un artista de *pixel art* semi-profesional y diseñador gráfico *freelance*. El sitio web está diseñado para mostrar sus trabajos (ilustraciones, animaciones, mapas y más), detallar sus habilidades, contar su biografía y proporcionar enlaces de redes sociales (Twitter, Instagram, Discord) y de apoyo económico (Ko-fi, PayPal). La página incluye créditos en el pie de página indicando que fue desarrollada por @YessZB.
+El proyecto está dividido en dos grandes bloques que iteran sobre la estética y el funcionamiento del portafolio del artista "LittlePigman":
 
-## 2. Cómo Funciona
-El proyecto es un sitio web estático (principalmente *Landing Page*), separado en varias secciones ancladas (`#works`, `#skills`, `#about`, `#contact`). Los usuarios pueden moverse por las secciones haciendo clic en la barra de navegación lateral e interactuar de distintas formas.
+## 1. El Frontend Público (Astro + Vanilla JS)
+Un portafolio Single Page Application (SPA) sin frameworks pesados, optimizado con **Astro**.
+Ubicado en la raíz del proyecto (`/`).
 
-**Flujo y Arquitectura:**
-- **Entrada Principal:** El archivo principal es `index.html`. Existe también un archivo `gallery.html` pensado para una vista extendida de su portafolio.
-- **Manejo de Estilos:** Se utiliza CSS puro, fragmentado en varios archivos modulares (como `main.css`, `navbar.css`, `footer.css`, `gallery.css`) situados en el directorio `/css`, lo que ayuda a la mantenibilidad del código. Además, utiliza `normalize.css`.
-- **Interactividad (JavaScript):** Su lógica está dividida utilizando módulos de ES6 (`type="module"`). El punto de entrada es `app.js`, que luego importa funcionalidades específicas como el menú de navegación (`navbar.js`) y un botón para volver al inicio (`scrollUp.js`), ubicadas en el directorio `/js`.
-- **Galería interactiva:** Consta de referencias y archivos de CSS de plugins externos de galerías fotográficas como *Lightbox* y posiblemente un grid mediante *Masonry*.
+**Características:**
+- Arquitectura de renderizado en el servidor SSG.
+- Estilo "Transer OS" retro-ciberpunk (pixel art, scanlines, glassmorphism).
+- Motor de i18n dinámico (idioma) mediante la ruta (ej. `/es/` o `/en/`). Usa contenido estático en `src/data/`.
+- Visor de imágenes optimizadas de galería y renders holográficos 3D web integrados nativamente.
+- Archivos clave: `src/pages/index.astro`, `src/data/*.json`, `src/layouts/TranserOS.astro`.
 
-## 3. Especificaciones Técnicas
-- **Tecnologías Base:** HTML5 Semántico, CSS3 Vanilla y JavaScript moderno (ES6 modules).
-- **Tipografía:** Depende orgánicamente de la fuente `VT323` (obtenida de Google Fonts), elegida por su similitud visual con la tipografía tradicional de *pixel art*.
-- **Iconos:** Implementación de *FontAwesome 6.1.1* vía CDN para redes sociales u otros íconos, mezclado con íconos vectoriales locales generados a partir de los propios diseños (*pixel-twitter*, *pixel-instagram*, etc.).
-- **Sistema de dependencias:** No parece poseer Node.js, `package.json`, o algún bundler como Webpack o Vite. Todo el entorno es servido estáticamente consumiendo *CDNs* y uniendo archivos modularizados de forma nativa por el navegador.
+## 2. El Bridge Backend (Express + SQLite)
+Un CMS remoto diseñado a medida (`/bridge`). El núcleo que maneja la autenticación y abstrae Google Drive.
 
-## 4. Prompt Externo Sugerido para Mejoras
-Si deseas pasar todo este contexto a otro LLM para idear mejoras, puedes utilizar el siguiente *prompt*:
+**Misión principal:**
+- Almacenar la estructura jerárquica de proyectos, secciones e items en su base de datos local SQLite (`portfolio.db`).
+- Proxy Seguro de Google Drive (`/api/file/:id`). Para ahorrar costes de hosting, todos los assets pesados y modelos se suben a Google Drive. El bridge hace de API Streaming que expone las imágenes bajo el dominio local validando permisos, lo que evita que los enlaces públicos expiren.
 
-***
+**Características de Seguridad:**
+- **OAuth2**: Sistema de login acoplado directamente a la cuenta de Google del artista.
+- **JWT Sessions**: Control de sesión en `/auth/session.ts` y middleware que redirige (401) si expira.
+- **Drive Verification**: Autenticación estricta: antes de guardar un enlace de Google Drive al CMS, verifica (`capabilities` y `permissions`) contra la Google ID alojada, impidiendo cargar assets de cuentas ajenas.
 
-**Prompt de Mejora de Portafolio Front-End:**
+## 3. El Admin UI (React + Vite)
+El panel de edición para el CMS (`/bridge/admin-ui`).
 
-> "Actúa como un desarrollador Front-End Senior y un diseñador UX/UI experto. Tengo el código base de un repositorio de un portafolio web para un artista de 'Pixel Art'. El proyecto actualmente es estático y se compone de HTML5, CSS3 (Modular) y JavaScript Vanilla usando ES6 Modules. Posee una página principal `index.html` con las secciones de Works, Skills, About Me y Contact, una barra lateral (navbar) responsiva que se colapsa, botón 'scroll to top' y una `gallery.html` secundaria. Utiliza fuentes de Google Fonts (VT323) para apariencia retro y las imágenes son pesadas ya que predominan artes y GIFs animados.
-> 
-> Quiero modernizar este repositorio llevándolo a un nivel 'Premium', pero conservando y destacando su temática esencial y su concepto artístico de 8-bits. 
-> 
-> Te pido que analices y propongas soluciones detalladas con código para los siguientes pilares:
-> 
-> 1. **Optimización de Rendimiento (Imágenes):** ¿Cuál sería la mejor estrategia e implementación de código nativo (como `loading="lazy"` o Intersection Observer) para cargar la galería de GIFs y artes pesados sin bloquear el render inicial?
-> 2. **Mejoras UX / Micro-interacciones:** Proporciona un código CSS/JS para agregar micro-animaciones (smooth scrolling perfecto, hover con resplandor en los botones de "View More", efecto glassmorphism suave que encaje con la paleta de colores).
-> 3. **Implementación en un Bundler:** Muestra cómo configuraríamos `Vite` (package.json, vite.config.js) de forma sencilla en este proyecto preexistente para poder minificar nuestro CSS, habilitar Hot Module Replacement (HMR) y organizar mejor nuestros *assets* para el pase a producción.
-> 4. **SEO Técnico y Semántica:** Indícame mejoras rápidas de etiquetas META y validaciones WCAG para hacer la web más accesible (etiquetas aria).
-> 
-> Por favor, dame tu resumen de recomendación e inicia sugiriéndome los cambios de optimización de las imágenes basándose en las necesidades del proyecto."
+**Características:**
+- Mapea directamente el CRUD sobre la db usando el API del Bridge.
+- **Soporte Bilingüe (i18n)**: Totalmente integrado con `react-i18next` permite tener una UI doble (ES/EN) y llenar los campos dinámicos `title_es`, `title_en`, etc., de forma simultánea pero separada dentro del formulario de un item.
+- Interfaz gráfica basada en Material UI + Lucide-react Icons, manteniendo una estética limpia y oscura "Premium".
+- Drag & drop de listados de galerías mediantes `@dnd-kit`.
 
-***
+## 4. Pipeline de Publicación (Generator)
+- A través de la acción de **Publicar** dentro del Admin UI, éste dispara un comando (`/api/admin/publish`) en el Bridge.
+- El Bridge ejecuta la recolección total de datos desde SQLite, cruza las traducciones inglesas y españolas, y exporta dos archivos gigantescos: `works.es.json` y `works.en.json`.
+- Éstos son pasados directamente a `/src/data/` del Astro, listo para ser consumido en la próxima recarga de construcción SSG.

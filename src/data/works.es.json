@@ -1,107 +1,50 @@
 [
   {
-    "id": "prj_crypto",
-    "title": "Crypto Heroes NFT",
-    "category": "Comercial",
-    "thumbnail": "/img/gifts/Mario.gif",
-    "role": "Lead Pixel Artist",
-    "description": "Creation of multiples heroes of varius universes in NFT Version",
+    "id": "prueba-proyecto",
+    "title": "Prueba proyecto",
+    "category": "Diseño Web",
+    "thumbnail": "http://localhost:3001/api/file/1YpxG54ttvoDJIhOiUEvWLGLB19bzlLpe?artistId=05887979669328594400",
+    "role": "Diseñador",
+    "description": "Descripcion",
     "workDone": [
       {
         "type": "asset-group",
-        "groupTitle": "Galería de Personajes (Muestra)",
-        "description": "Diseños clásicos adaptados a la colección.",
+        "groupTitle": "Nueva Sección",
+        "description": "asdasd",
         "items": [
-          { "title": "Personaje NFT 1", "img": "/img/pixelarts/2B.png", "desc": "Diseño Estático" },
-          { "title": "Personaje NFT 2", "img": "/img/pixelarts/Asta.png", "desc": "Diseño Estático" }
+          {
+            "title": "ELADIOOO",
+            "img": "http://localhost:3001/api/file/1m89nt8JbF8geNm3hF4Ix6_Ezgx7phg7f?artistId=05887979669328594400",
+            "desc": "Hola\n"
+          },
+          {
+            "title": "asd",
+            "img": "http://localhost:3001/api/file/1YpxG54ttvoDJIhOiUEvWLGLB19bzlLpe?artistId=05887979669328594400",
+            "desc": "asd"
+          }
         ]
+      },
+      {
+        "type": "gltf-model",
+        "title": "Nueva Sección",
+        "description": null,
+        "modelUrl": "http://localhost:3001/api/file/1Pv4lRG5Cr0lyT0blu7vPf3PdJM4Pwnzo?artistId=05887979669328594400"
       }
     ]
   },
   {
-    "id": "prj_tiny",
-    "title": "Tiny Colony",
-    "category": "Comercial",
-    "thumbnail": "/img/gifts/TinyColony.gif",
-    "role": "Animator",
-    "description": "Collection of games and experience in a ant metaverse world.",
+    "id": "asd",
+    "title": "asd",
+    "category": "Diseño Web",
+    "thumbnail": "http://localhost:3001/api/file/1YpxG54ttvoDJIhOiUEvWLGLB19bzlLpe?artistId=05887979669328594400",
+    "role": "asd",
+    "description": "asd",
     "workDone": [
       {
-        "type": "3d-model",
-        "title": "Prototipo 3D Base (WebGL)",
-        "description": "Visor de malla 3D base de entorno. (Ejemplo Holográfico WebGL).",
-        "modelPlaceholderColor": 12146341,
-        "textures": [
-          { "name": "Ant Pirate", "img": "/img/pixelarts/AntPirate.png" }
-        ]
-      },
-      {
-        "type": "asset-group",
-        "groupTitle": "Animaciones Principales",
-        "description": "Ciclos de movimiento para personajes de Tiny Colony y asociados.",
-        "items": [
-          { "title": "Mob Psycho (Ref)", "img": "/img/gifts/MobPsycho.gif", "desc": "Ciclo" },
-          { "title": "Loomian (Ref)", "img": "/img/gifts/LLGB_Intro.gif", "desc": "Cinemática" }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "prj_arte_propio",
-    "title": "Arte Propio / General",
-    "category": "Personal",
-    "thumbnail": "/img/pixelarts/Boy_PFP.png",
-    "role": "Pixel Artist",
-    "description": "Recopilación de arte personal y ejercicios técnicos.",
-    "workDone": [
-      {
-        "type": "asset-group",
-        "groupTitle": "Pixel Arts",
-        "description": "Colección de ilustraciones en pixel art.",
-        "items": [
-          { "title": "2B Back", "img": "/img/pixelarts/2B_back.png" },
-          { "title": "Akio", "img": "/img/pixelarts/Akio.png" },
-          { "title": "Arabelle", "img": "/img/pixelarts/Arabelle.png" },
-          { "title": "Biography", "img": "/img/pixelarts/Biography.png" },
-          { "title": "Cho", "img": "/img/pixelarts/Cho.png" },
-          { "title": "Cute Girl", "img": "/img/pixelarts/CuteGirl.png" },
-          { "title": "Dororo", "img": "/img/pixelarts/Dororo.png" },
-          { "title": "Erina", "img": "/img/pixelarts/Erina.png" },
-          { "title": "Future Princess", "img": "/img/pixelarts/FuturePrincess.png" },
-          { "title": "GT Demake", "img": "/img/pixelarts/GT-Demake.png" },
-          { "title": "Loomian GBA", "img": "/img/pixelarts/Loomian GBA.png" },
-          { "title": "MK99", "img": "/img/pixelarts/MK99.png" },
-          { "title": "Mabel", "img": "/img/pixelarts/Mabel.png" },
-          { "title": "May HD", "img": "/img/pixelarts/MayHD.png" },
-          { "title": "Menma", "img": "/img/pixelarts/Menma.png" },
-          { "title": "Priscilla", "img": "/img/pixelarts/Priscilla.png" },
-          { "title": "Reynald", "img": "/img/pixelarts/Reynald3.png" },
-          { "title": "Sophie", "img": "/img/pixelarts/The-Moving-Castle.png" },
-          { "title": "Unicorn", "img": "/img/pixelarts/Unicorn.png" },
-          { "title": "Ursnac", "img": "/img/pixelarts/Ursnac.png" }
-        ]
-      },
-      {
-        "type": "asset-group",
-        "groupTitle": "Backgrounds & Scenery",
-        "description": "Fondos y tilesets pixelados.",
-        "items": [
-          { "title": "Sewers 1", "img": "/img/pixelarts/Sewers1.png" },
-          { "title": "Sewers 2", "img": "/img/pixelarts/Sewers2.png" },
-          { "title": "Sewers 3", "img": "/img/pixelarts/Sewers3.png" },
-          { "title": "Route 8", "img": "/img/pixelarts/route 8.png" }
-        ]
-      },
-      {
-        "type": "asset-group",
-        "groupTitle": "Animations (GIFs)",
-        "description": "Trabajos animados en formato GIF.",
-        "items": [
-          { "title": "Flower Girl", "img": "/img/gifts/FlowerGirl.gif" },
-          { "title": "LeBarri Emote", "img": "/img/gifts/LeBarri_Emote.gif" },
-          { "title": "Mecha", "img": "/img/gifts/Mecha.gif" },
-          { "title": "Water Lily Girl", "img": "/img/gifts/WaterLilyGirl.gif" }
-        ]
+        "type": "gltf-model",
+        "title": "Nueva Sección",
+        "description": null,
+        "modelUrl": "http://localhost:3001/api/file/1Pv4lRG5Cr0lyT0blu7vPf3PdJM4Pwnzo?artistId=05887979669328594400"
       }
     ]
   }

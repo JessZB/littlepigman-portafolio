@@ -2,6 +2,23 @@
 
 Portafolio web estilo Cyberpunk/JRPG de 16 bits para el artista pixel art **LittlePigman**, diseñado bajo el concepto de sistema operativo retro ("Transer OS").
 
+---
+
+## 🤖 Agente de Codificación — Workflows Disponibles
+
+> Comandos que el agente AI debe seguir al trabajar en este repositorio.
+> Cada workflow incluye una **Condición de Cierre** con validación cruzada de los tres expertos (Frontend, Backend, Seguridad) antes de considerarse completo.
+
+| Workflow | Trigger | Descripción |
+| :--- | :--- | :--- |
+| **Crear Feature** | `/crear-feature` | Diseño UI → Implementación Backend → Integración → Validación cruzada. No finaliza sin checklist de los 3 expertos. |
+| **Code Review** | `/code-review` | Análisis de diff → Checklist Frontend → Checklist Backend → Auditoría OWASP. Requiere declaración firmada del Experto en Seguridad. |
+| **Deploy Check** | `/deploy-check` | Valida entorno, JWT, pipeline de publicación atómica, build Astro y proxy de Drive. Requiere visto bueno de los 3 roles para confirmar. |
+
+📁 Workflows completos en [`.agents/workflows/`](.agents/workflows/) · Rules de cada experto en [`.agents/rules/`](.agents/rules/)
+
+---
+
 ## Características Principales
 
 *   **Arquitectura:** Construido como una Single Page Application (SPA) nativa utilizando **Astro**.
@@ -13,7 +30,7 @@ Portafolio web estilo Cyberpunk/JRPG de 16 bits para el artista pixel art **Litt
 ## Estructura del Proyecto
 
 ### 1. `src/layouts/`
-*   **`TranserOS.astro`:** Es el envoltorio (layout) principal. Define el HTML base, inyecta Tailwind vía CDN (por simplicidad), carga la fuente pixelada (`VT323`) desde Google Fonts y declara las variables CSS globales y las animaciones (como los scanlines y estilos de paneles ciberpunk).
+*   **`TranserOS.astro`:** Es el envoltorio (layout) principal. Define el HTML base, carga la fuente pixelada (`VT323`) desde Google Fonts y declara las variables CSS globales y las animaciones (scanlines y estilos de paneles ciberpunk).
 
 ### 2. `src/pages/`
 *   **`index.astro`:** El punto de entrada y corazón de la SPA. Une todos los componentes de vista (`ViewProfile`, `ViewDatabase`, `ViewComms`) y contiene toda la lógica de estado JavaScript en tiempo real (manejo de pestañas, apertura de modales, visor 3D paramétrico, reloj y variables de entorno pasadas al cliente).
@@ -32,16 +49,23 @@ Portafolio web estilo Cyberpunk/JRPG de 16 bits para el artista pixel art **Litt
 Carpeta crítica que actúa como la **base de datos JSON** para inyectar información dinámica al sitio en tiempo de construcción.
 *   **`about.json`:** Ficha del personaje/artista (nombre, nivel, bio, métricas, y software).
 *   **`socials.json`:** Archivo que contiene los mapeos, iconos de redes y enlaces directos a las cuentas del artista.
-*   **`works.json`:** Base de datos estructurada con el trabajo del artista. Soporta tipificación avanzada: matrices `asset-group` para agrupaciones de imágenes sencillas y entidades `3d-model` para invocar renders holográficos Three.js.
+*   **`works.es.json` / `works.en.json`:** Base de datos bilingüe del trabajo del artista. Generada automáticamente por el pipeline de publicación del Bridge.
 
 ### 5. `public/`
 Contiene todos los gráficos exportados para consumo directo.
 *   **`icons/`:** Iconos pixel-art para programas y redes sociales.
 *   **`img/`:** Activos clasificados primariamente en `./pixelarts/` y `./gifts/` (con los sprites animados).
 
+### 6. `bridge/` (Backend y CMS Administrador)
+El ecosistema para gestionar dinámicamente todo el portfolio sin necesidad de tocar el código fuente.
+*   **Servidor Proxy Node.js/SQLite (`/bridge/src/`):** Backend manejador de base de datos, OAuth2 contra Google Drive (sirve los modelados 3d y texturas mediante Streams seguros) y verificador de permisos JWT de los artistas.
+*   **Admin UI (`/bridge/admin-ui/`):** Dashboard programado en React. Permite editar en tiempo real (drag&drop) galerías de trabajos, configurar idiomas separados simultáneos (es/en) y exportar (`Publish`) la información JSON final hacia `/src/data/` de Astro.
+
 ## Comandos
 
-Todos los comandos se corren desde la raíz del proyecto, a través de Node.js:
+Se dividen en los comandos del Frontend público y el Administrador:
+
+### Frontend (Astro) -> Directorio Raíz (`/`)
 
 | Comando | Acción |
 | :--- | :--- |
@@ -50,7 +74,15 @@ Todos los comandos se corren desde la raíz del proyecto, a través de Node.js:
 | `npm run build` | Compila tu sitio para producción, empaquetado y optimizado, dejándolo en `./dist/`. |
 | `npm run preview` | Previsualiza localmente el archivo compilado en distribución. |
 
+### CMS & Proxy -> Directorio Bridge (`/bridge/`)
+
+| Comando | Acción |
+| :--- | :--- |
+| `npm run dev` | Inicia el API Backend (`localhost:3001`). Corre nodemon en `/src/`. |
+| `cd admin-ui && npm run dev` | Inicia el Panel Frontend Admin React (`localhost:5173`). |
+
 ## Mantenimiento
 
-*   **Para agregar imágenes:** Añádelas a `/public/img/...` y luego haz una referencia cruzada agregándola a un nodo dentro de `/src/data/works.json`.
+*   **Publicación de Contenido Nuevo:** A través del panel CMS (`admin-ui`), añade tu diseño en Drive y publícalo. El CMS sobreescribirá en código los `.json` optimizados en la raíz.
 *   **Para cambiar colores temáticos:** Edita `:root` dentro de `src/layouts/TranserOS.astro`.
+*   *(Nota: Asegúrate de añadir las credenciales OAuth necesarias en el `.env` del bridge antes de loguearte en el CMS, tu user de Google Drive es validado).*

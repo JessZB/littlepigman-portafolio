@@ -22,7 +22,7 @@ const worksDataModule = await import(`../../data/works.${lang}.json`);
 const worksData = worksDataModule.default;
 ---
 
-<TranserOS title="Transer OS">
+<TranserOS title="Transer OS" lang={lang}>
   
   <!-- Language Toggle UI -->
   <div class="absolute top-2 right-2 sm:top-4 sm:right-4 z-[210] flex gap-2 font-['VT323']">
@@ -43,7 +43,7 @@ const worksData = worksDataModule.default;
       <button onclick="closeLightbox()" class="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 bg-[var(--color-danger)] border-2 border-white text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:scale-110 z-10 cursor-pointer text-lg">
         X
       </button>
-      <img id="lightbox-img" src="" alt="Arte" class="w-full h-[50vh] sm:h-[70vh] object-contain bg-black border-2 border-[var(--color-panel-border)] pixelated" loading="eager" />
+      <img id="lightbox-img" src="" alt={lang === 'es' ? 'Arte' : 'Art'} class="w-full h-[50vh] sm:h-[70vh] object-contain bg-black border-2 border-[var(--color-panel-border)] pixelated" loading="eager" />
       <div id="lightbox-title" class="text-center text-[var(--color-panel-border)] mt-2 text-xl sm:text-2xl uppercase truncate px-4"></div>
     </div>
   </div>
@@ -52,18 +52,20 @@ const worksData = worksDataModule.default;
 <!-- Inyectar data requerida por el JS Cliente para los modales de Project -->
 <script is:inline define:vars={{ 
   worksData, 
+  lang,
   textRol: t('proj.role'), 
   textLog: t('proj.log'), 
   textAssets: t('proj.assets') 
 }}>
   window.portfolioDB = { projects: worksData };
-  window.portfolioUI = { role: textRol, log: textLog, assets: textAssets };
+  window.portfolioUI = { role: textRol, log: textLog, assets: textAssets, lang };
 </script>
 
 <script is:inline>
   // Reloj
   function updateClock() {
-    const timeStr = new Date().toLocaleTimeString('es-ES', { hour12: false });
+    const locale = window.portfolioUI.lang === 'es' ? 'es-ES' : 'en-US';
+    const timeStr = new Date().toLocaleTimeString(locale, { hour12: false });
     document.querySelectorAll('.clock-display').forEach((el) => (el.textContent = timeStr));
   }
   setInterval(updateClock, 1000);
@@ -115,17 +117,40 @@ const worksData = worksDataModule.default;
                     <p class="text-gray-400 text-sm sm:text-base mt-1">${work.description}</p>
                 </div>
                 <div class="flex flex-col lg:flex-row gap-3 sm:gap-4">
-                    <div class="w-full lg:w-2/3 holo-viewer" id="canvas-container-${index}"></div>
+                    <div class="relative w-full lg:w-2/3">
+                        <div class="w-full h-full holo-viewer" id="canvas-container-${index}"></div>
+                        <div class="absolute bottom-2 right-2 flex gap-2 z-10">
+                            <button onclick="window.toggle3DRotation('canvas-container-${index}')" class="bg-[var(--color-dark-purple)] border border-[var(--color-highlight)] text-white px-3 py-1 text-xs hover:bg-[var(--color-panel-border)] shadow-md">↺</button>
+                            <button onclick="window.zoom3DModel('canvas-container-${index}', -1)" class="bg-[var(--color-dark-purple)] border border-[var(--color-highlight)] text-white px-3 py-1 text-xs hover:bg-[var(--color-panel-border)] shadow-md">-</button>
+                            <button onclick="window.zoom3DModel('canvas-container-${index}', 1)" class="bg-[var(--color-dark-purple)] border border-[var(--color-highlight)] text-white px-3 py-1 text-xs hover:bg-[var(--color-panel-border)] shadow-md">+</button>
+                        </div>
+                    </div>
                     <div class="w-full lg:w-1/3 flex flex-col gap-2">
                         <span class="text-[var(--color-accent)] text-xs sm:text-sm border-b border-gray-600 pb-1">${window.portfolioUI.assets}</span>
                         <div class="grid grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2">
                             ${work.textures.map(tex => `
-                                <div class="flex flex-col cursor-pointer hover:border-[var(--color-panel-border)] border border-transparent transition-all" onclick="openLightbox('${tex.img}', '${tex.name}')">
+                                <div class="flex flex-col cursor-pointer hover:border-[var(--color-panel-border)] border border-transparent transition-all" onclick="openLightbox('${tex.img}', '${tex.name}'); window.changeHologramTexture && window.changeHologramTexture('canvas-container-${index}', '${tex.img}')">
                                     <img src="${tex.img}" class="w-full aspect-square object-cover pixelated border border-gray-700" alt="${tex.name}">
                                     <span class="text-[10px] sm:text-xs text-center text-gray-400 mt-1 truncate px-1">${tex.name}</span>
                                 </div>
                             `).join('')}
                         </div>
+                    </div>
+                </div>
+            </div>`;
+      } else if (work.type === 'gltf-model') {
+          contentHTML += `
+            <div class="bg-black border border-[var(--color-panel-border)] p-3 sm:p-4 flex flex-col gap-3 sm:gap-4">
+                <div>
+                    <h3 class="text-xl sm:text-2xl text-[var(--color-panel-border-glow)] leading-tight">${work.title}</h3>
+                    <p class="text-gray-400 text-sm sm:text-base mt-1">${work.description}</p>
+                </div>
+                <div class="relative w-full aspect-video border-2 border-[var(--color-accent)]">
+                    <div class="w-full h-full holo-viewer" id="canvas-container-${index}"></div>
+                    <div class="absolute bottom-2 right-2 flex gap-2 z-10">
+                        <button onclick="window.toggle3DRotation('canvas-container-${index}')" class="bg-[var(--color-dark-purple)] border border-[var(--color-highlight)] text-white px-3 py-1 text-sm hover:bg-[var(--color-panel-border)] shadow-md">↺</button>
+                        <button onclick="window.zoom3DModel('canvas-container-${index}', -1)" class="bg-[var(--color-dark-purple)] border border-[var(--color-highlight)] text-white px-3 py-1 text-sm hover:bg-[var(--color-panel-border)] shadow-md">-</button>
+                        <button onclick="window.zoom3DModel('canvas-container-${index}', 1)" class="bg-[var(--color-dark-purple)] border border-[var(--color-highlight)] text-white px-3 py-1 text-sm hover:bg-[var(--color-panel-border)] shadow-md">+</button>
                     </div>
                 </div>
             </div>`;
@@ -154,7 +179,10 @@ const worksData = worksDataModule.default;
     setTimeout(() => {
       project.workDone.forEach((work, index) => {
         if (work.type === '3d-model') {
-          initThreeJSHologram(`canvas-container-${index}`, work.modelPlaceholderColor);
+          const firstTex = work.textures && work.textures.length > 0 ? work.textures[0].img : null;
+          initThreeJSHologram(`canvas-container-${index}`, work.modelPlaceholderColor || 0xff00ff, firstTex);
+        } else if (work.type === 'gltf-model') {
+          initThreeJSGLTF(`canvas-container-${index}`, work.modelUrl);
         }
       });
       window.dispatchEvent(new Event('resize'));
@@ -168,8 +196,26 @@ const worksData = worksDataModule.default;
     if (currentAnimationId) cancelAnimationFrame(currentAnimationId);
   }
 
+  window.threeJSModels = window.threeJSModels || {};
+  window.threeJSControls = window.threeJSControls || {};
+
+  window.toggle3DRotation = function(id) {
+    if(window.threeJSControls[id]) {
+      window.threeJSControls[id].rotate = !window.threeJSControls[id].rotate;
+    }
+  };
+
+  window.zoom3DModel = function(id, dir) {
+    if(window.threeJSControls[id]) {
+        const cam = window.threeJSControls[id].camera;
+        cam.position.z -= dir * 1.5;
+        if(cam.position.z < 2) cam.position.z = 2;
+        if(cam.position.z > 15) cam.position.z = 15;
+    }
+  };
+
   // Three JS init
-  function initThreeJSHologram(containerId, hexColor) {
+  function initThreeJSHologram(containerId, hexColor, textureUrl) {
     const container = document.getElementById(containerId);
     if (!container) return;
     const scene = new THREE.Scene();
@@ -178,16 +224,32 @@ const worksData = worksDataModule.default;
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
 
-    const geometry = new THREE.IcosahedronGeometry(1.5, 0);
-    const material = new THREE.MeshBasicMaterial({ color: hexColor, wireframe: true, wireframeLinewidth: 2 });
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    let mesh, core;
 
-    const coreMat = new THREE.MeshBasicMaterial({ color: 0x110011 });
-    const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 0), coreMat);
-    scene.add(core);
+    if (textureUrl) {
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load(textureUrl);
+        texture.magFilter = THREE.NearestFilter;
+        texture.minFilter = THREE.NearestFilter;
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+    } else {
+        const geometry = new THREE.IcosahedronGeometry(1.5, 0);
+        const material = new THREE.MeshBasicMaterial({ color: hexColor, wireframe: true, wireframeLinewidth: 2 });
+        mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0x110011 });
+        core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 0), coreMat);
+        scene.add(core);
+    }
 
     camera.position.z = 5;
+
+    window.threeJSModels[containerId] = mesh || core;
+    window.threeJSControls[containerId] = { rotate: true, camera: camera };
 
     let isDragging = false;
     let previousPosition = { x: 0, y: 0 };
@@ -199,8 +261,10 @@ const worksData = worksDataModule.default;
         const deltaMove = { x: e.offsetX - previousPosition.x, y: e.offsetY - previousPosition.y };
         mesh.rotation.y += deltaMove.x * 0.01;
         mesh.rotation.x += deltaMove.y * 0.01;
-        core.rotation.y += deltaMove.x * 0.01;
-        core.rotation.x += deltaMove.y * 0.01;
+        if (core) {
+            core.rotation.y += deltaMove.x * 0.01;
+            core.rotation.x += deltaMove.y * 0.01;
+        }
       }
       previousPosition = { x: e.offsetX, y: e.offsetY };
     });
@@ -215,19 +279,170 @@ const worksData = worksDataModule.default;
         const deltaMove = { x: e.touches[0].clientX - previousPosition.x, y: e.touches[0].clientY - previousPosition.y };
         mesh.rotation.y += deltaMove.x * 0.01;
         mesh.rotation.x += deltaMove.y * 0.01;
-        core.rotation.y += deltaMove.x * 0.01;
-        core.rotation.x += deltaMove.y * 0.01;
+        if (core) {
+            core.rotation.y += deltaMove.x * 0.01;
+            core.rotation.x += deltaMove.y * 0.01;
+        }
         previousPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }
     }, { passive: true });
 
+    container.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      camera.position.z += e.deltaY * 0.005;
+      if (camera.position.z < 2) camera.position.z = 2;
+      if (camera.position.z > 12) camera.position.z = 12;
+    }, { passive: false });
+
     function animate() {
       currentAnimationId = requestAnimationFrame(animate);
-      if (!isDragging) {
-        mesh.rotation.y += 0.005;
-        mesh.rotation.x += 0.002;
-        core.rotation.y += 0.005;
-        core.rotation.x += 0.002;
+      if (!isDragging && window.threeJSControls[containerId].rotate) {
+        if(mesh) {
+            mesh.rotation.y += 0.005;
+            mesh.rotation.x += 0.002;
+        }
+        if (core) {
+            core.rotation.y += 0.005;
+            core.rotation.x += 0.002;
+        }
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      if (container && container.clientWidth > 0) {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      }
+    });
+  }
+
+  window.changeHologramTexture = function(containerId, imgSrc) {
+    if (window.threeJSModels && window.threeJSModels[containerId]) {
+        const mesh = window.threeJSModels[containerId];
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load(imgSrc);
+        texture.magFilter = THREE.NearestFilter;
+        texture.minFilter = THREE.NearestFilter;
+        
+        if (mesh.material.map) {
+           mesh.material.map.dispose();
+        } else {
+            mesh.material.wireframe = false;
+        }
+        mesh.material.map = texture;
+        mesh.material.needsUpdate = true;
+    }
+  };
+
+  function initThreeJSGLTF(containerId, modelUrl) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const scene = new THREE.Scene();
+    
+    // Add lighting for the model
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    directionalLight.position.set(5, 10, 5);
+    scene.add(directionalLight);
+
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.pixelRatio = window.devicePixelRatio; // essential for pixel art sharpness on retina
+    container.appendChild(renderer.domElement);
+
+    let modelGroup = new THREE.Group();
+    scene.add(modelGroup);
+
+    // Ensure THREE.GLTFLoader is available (added via CDN globally)
+    if (typeof THREE.GLTFLoader !== 'undefined') {
+        const loader = new THREE.GLTFLoader();
+        loader.load(modelUrl, function (gltf) {
+            const model = gltf.scene;
+            
+            // Adjust center and scale so it fits perfectly on screen
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+
+            const maxDim = Math.max(size.x, size.y, size.z);
+            let scale = 1;
+            if (maxDim > 0) {
+                scale = 3 / maxDim; // Fit inside a 3 unit box
+            }
+            model.scale.set(scale, scale, scale);
+            
+            // Center the model's pivot
+            model.position.sub(center.multiplyScalar(scale));
+            
+            // Apply crisp pixel-art filtering recursively
+            model.traverse((child) => {
+                if (child.isMesh && child.material && child.material.map) {
+                    child.material.map.magFilter = THREE.NearestFilter;
+                    child.material.map.minFilter = THREE.NearestFilter;
+                    child.material.map.generateMipmaps = false;
+                }
+            });
+
+            modelGroup.add(model);
+            
+        }, undefined, function (error) {
+            console.error('Error loading GLTF model:', error);
+            container.innerHTML = '<span class="text-red-500">Error loading 3D Model (' + error.message + ')</span>';
+        });
+    } else {
+        console.error("GLTFLoader missing!");
+    }
+
+    camera.position.z = 6;
+    
+    window.threeJSModels[containerId] = modelGroup;
+    window.threeJSControls[containerId] = { rotate: true, camera: camera };
+
+    let isDragging = false;
+    let previousPosition = { x: 0, y: 0 };
+
+    container.addEventListener('mousedown', (e) => { isDragging = true; previousPosition = { x: e.offsetX, y: e.offsetY }; });
+    window.addEventListener('mouseup', () => (isDragging = false));
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const deltaMove = { x: e.offsetX - previousPosition.x, y: e.offsetY - previousPosition.y };
+        modelGroup.rotation.y += deltaMove.x * 0.01;
+        modelGroup.rotation.x += deltaMove.y * 0.01;
+      }
+      previousPosition = { x: e.offsetX, y: e.offsetY };
+    });
+
+    container.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      previousPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }, { passive: true });
+    window.addEventListener('touchend', () => (isDragging = false));
+    window.addEventListener('touchmove', (e) => {
+      if (isDragging) {
+        const deltaMove = { x: e.touches[0].clientX - previousPosition.x, y: e.touches[0].clientY - previousPosition.y };
+        modelGroup.rotation.y += deltaMove.x * 0.01;
+        modelGroup.rotation.x += deltaMove.y * 0.01;
+        previousPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    }, { passive: true });
+
+    container.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      camera.position.z += e.deltaY * 0.005;
+      if (camera.position.z < 2) camera.position.z = 2;
+      if (camera.position.z > 15) camera.position.z = 15;
+    }, { passive: false });
+
+    function animate() {
+      currentAnimationId = requestAnimationFrame(animate);
+      if (!isDragging && window.threeJSControls[containerId].rotate) {
+        modelGroup.rotation.y += 0.01;
       }
       renderer.render(scene, camera);
     }
