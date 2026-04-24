@@ -1,75 +1,50 @@
-# Workflow: Revisión de Código (`/code-review`)
+# Workflow: Revisión de Código (`/review`)
 
-Auditoría exhaustiva de calidad y seguridad para cualquier PR o commit en el stack Transer OS.
+Auditoría de calidad y seguridad para el portfolio Astro.
 
 ---
 
-## Pasos del Workflow
+## 1. Validación Técnica (¡MANDATORIO!)
 
-### Paso 1 — Análisis del Diff
-- Identificar archivos modificados y clasificarlos por capa:
-  - `src/` → Frontend Astro (aplica reglas de `frontend-expert.md`)
-  - `bridge/src/` → Bridge Backend (aplica reglas de `backend-expert.md`)
-  - `bridge/admin-ui/src/` → Admin React (aplica reglas de `frontend-expert.md` + `security-expert.md`)
-  - `src/data/` → JSON generados (verificar estructura bilingüe)
-- Estimar el riesgo del cambio: bajo / medio / alto (cambios en auth, proxy Drive o pipeline = alto).
+Antes de proceder con la revisión lógica, el cambio **debe** pasar las pruebas de integridad:
 
-### Paso 2 — Validación Técnica (Tipado y Sintaxis)
-- [ ] **Admin UI:** Ejecutar `npx tsc --noEmit` en `bridge/admin-ui/`. No debe haber errores de tipado.
-- [ ] **Bridge Backend:** Ejecutar `npx tsc --noEmit` en `bridge/`. No debe haber errores de compilación o tipado.
-- [ ] **Astro Frontend:** Ejecutar `npx astro check` en la raíz del proyecto. Validar que no existan errores de sintaxis en componentes `.astro`.
-- [ ] **Limpieza:** Verificar que no existan componentes o funciones importadas pero no utilizadas (Dead Code).
+```bash
+# Validar componentes Astro
+npx astro check
+```
 
-### Paso 3 — Checklist Frontend (`frontend-expert.md`)
-- [ ] ¿Los estilos nuevos usan variables CSS de `:root` en `TranserOS.astro`?
-- [ ] ¿Los textos visibles están en `ui.ts` (Astro) o en las claves `i18next` del Admin? ¿Existen en ambos idiomas?
-- [ ] ¿Los componentes Astro nuevos son estáticos por defecto? ¿Se justifica cualquier `client:*`?
-- [ ] ¿Las imágenes usan `<Image />` de Astro con `loading="lazy"` donde corresponde?
-- [ ] ¿El drag & drop del Admin usa `@dnd-kit` y no una librería alternativa?
+### Reglas de Validación
+- **Cero errores:** No se permiten errores de sintaxis o de tipos en el código final.
+- **Sin Código Muerto:** Eliminar imports no utilizados y variables huérfanas.
+- **Tipado Estricto:** Prohibido el uso de `any` injustificado.
 
-### Paso 4 — Checklist Backend (`backend-expert.md`)
-- [ ] ¿Toda ruta nueva bajo `/api/admin/*` o `/api/file/*` tiene el middleware JWT como primer handler?
-- [ ] ¿Todas las queries SQLite usan `?` parametrizado? ¿Ninguna concatena strings del usuario?
-- [ ] ¿El manejo de errores usa la clase centralizada `AppError` y no expone stack traces?
-- [ ] ¿Las operaciones multi-tabla están en una transacción `BEGIN / COMMIT / ROLLBACK`?
-- [ ] ¿El streaming del proxy Drive usa `pipe`/streams sin acumular el archivo en memoria?
+## 2. Revisión de Diseño (Frontend Expert)
 
-### Paso 5 — Auditoría de Seguridad (`security-expert.md`)
+Consultar al **Experto Frontend** para validar:
+- Coherencia con la estética Transer OS.
+- Uso correcto de visores Three.js.
+- Responsividad y optimización de imágenes (`<Image />`).
 
-> Esta es la fase de **mayor peso**. Si hay conflicto con los pasos anteriores, este paso tiene prioridad.
+## 3. Revisión de Seguridad (Cybersecurity Expert)
 
-**A03 — Injection**
-- [ ] ¿Ningún query SQL concatena datos del usuario? → usar Zod + placeholders SQLite.
-- [ ] ¿No hay `exec()`, `eval()` ni `child_process` con inputs del cliente?
-
-**A07 — Authentication Failures**
-- [ ] ¿El JWT se verifica (firma + expiración) en cada request protegida?
-- [ ] ¿`JWT_SECRET` y `GOOGLE_CLIENT_SECRET` solo existen en `.env` y no aparecen en el diff?
+**A03 — Injection (XSS)**
+- [ ] ¿Los datos de `src/data/*.json` se renderizan con el escape automático `{}`?
+- [ ] ¿Si se usa `set:html`, el contenido ha sido sanitizado previamente?
 
 **A05 — Security Misconfiguration**
-- [ ] ¿La política CORS no fue ampliada más allá de la whitelist definida en `security-expert.md`?
-- [ ] ¿Los headers de seguridad siguen presentes (`X-Content-Type-Options`, `X-Frame-Options`)?
-
-**A02 — Cryptographic Failures**
-- [ ] ¿No se loggea ningún token, secret ni PII en el diff?
-
-**A01 — Broken Access Control**
-- [ ] ¿El File ID de Drive siempre se re-valida contra la DB local antes de llamar a la API de Google?
+- [ ] ¿No hay secretos (`PUBLIC_*`) expuestos innecesariamente en `.env`?
+- [ ] ¿Se mantienen los headers de seguridad si hay cambios en la config de despliegue?
 
 ---
 
-## ⛔ CONDICIÓN DE CIERRE — Veto del Experto en Ciberseguridad
+## 🔒 AUDITORÍA DE SEGURIDAD — RESULTADO FINAL
 
-> **El workflow de code-review NO puede finalizar sin la confirmación explícita del Experto en Ciberseguridad.**
-
-El agente debe emitir una declaración final en este formato:
+El agente debe emitir una declaración final:
 
 ```
-🔒 AUDITORÍA DE SEGURIDAD — RESULTADO FINAL
+🔒 AUDITORÍA DE SEGURIDAD (ASTRO FRONTEND)
 Revisado contra: security-expert.md
-OWASP Top 10 cubiertos: A01 ✅ | A02 ✅ | A03 ✅ | A05 ✅ | A07 ✅
-Vulnerabilidades encontradas: [ninguna / lista detallada]
-Decisión: APROBADO ✅ / BLOQUEADO 🚫 (razón)
+Vulnerabilidades XSS: ✅
+Secrets Check: ✅
+Decisión: APROBADO ✅ / BLOQUEADO 🚫
 ```
-
-> Si el resultado es **BLOQUEADO**, el PR no puede mergearse. Los problemas deben resolverse y el workflow debe reiniciarse desde el Paso 4.
