@@ -53,6 +53,58 @@ export function initDb() {
       description_en TEXT,
       sort_order INTEGER DEFAULT 0
     );
+
+    CREATE TABLE IF NOT EXISTS artist_profiles (
+      artist_id TEXT PRIMARY KEY REFERENCES artists(id) ON DELETE CASCADE,
+      class_es TEXT,
+      class_en TEXT,
+      level INTEGER DEFAULT 1,
+      status_es TEXT,
+      status_en TEXT,
+      bio_es TEXT,
+      bio_en TEXT,
+      favicon_drive_id TEXT,
+      avatar_drive_id TEXT,
+      site_title_es TEXT,
+      site_title_en TEXT,
+      seo_desc_es TEXT,
+      seo_desc_en TEXT,
+      contact_title_es TEXT,
+      contact_title_en TEXT,
+      contact_desc_es TEXT,
+      contact_desc_en TEXT,
+      contact_email TEXT,
+      theme_json TEXT -- Contiene los colores en formato JSON
+    );
+
+    CREATE TABLE IF NOT EXISTS artist_socials (
+      id TEXT PRIMARY KEY,
+      artist_id TEXT REFERENCES artists(id) ON DELETE CASCADE,
+      name TEXT,
+      link TEXT,
+      icon_drive_id TEXT,
+      active INTEGER DEFAULT 1,
+      sort_order INTEGER DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS artist_software (
+      id TEXT PRIMARY KEY,
+      artist_id TEXT REFERENCES artists(id) ON DELETE CASCADE,
+      name TEXT,
+      icon_drive_id TEXT,
+      color TEXT,
+      sort_order INTEGER DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS artist_stats (
+      id TEXT PRIMARY KEY,
+      artist_id TEXT REFERENCES artists(id) ON DELETE CASCADE,
+      name_es TEXT,
+      name_en TEXT,
+      value INTEGER DEFAULT 0,
+      css_class TEXT,
+      sort_order INTEGER DEFAULT 0
+    );
   `);
 
   // Migration: Ensure preferred_lang exists

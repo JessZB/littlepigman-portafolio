@@ -7,22 +7,51 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ProjectEditor from './pages/ProjectEditor';
 import api from './api/client';
+import ProfileEditor from './pages/ProfileEditor';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   const [status, setStatus] = useState<'checking' | 'ok' | 'fail'>('checking');
 
   useEffect(() => {
     const token = localStorage.getItem('sessionToken');
-    if (!token) { setStatus('fail'); return; }
+    if (!token) { 
+      setStatus('fail'); 
+      return; 
+    }
 
-    // Validate token is still alive against the server
     api.get('/admin/projects')
       .then(() => setStatus('ok'))
-      .catch(() => setStatus('fail'));
+      .catch(() => {
+        localStorage.removeItem('sessionToken');
+        setStatus('fail');
+      });
   }, []);
 
-  if (status === 'checking') return null; // brief blank while verifying
+  if (status === 'checking') return null;
   if (status === 'fail') return <Navigate to="/login" replace />;
+  return children;
+};
+
+const PublicRoute = ({ children }: { children: React.ReactElement }) => {
+  const [status, setStatus] = useState<'checking' | 'logged_in' | 'logged_out'>('checking');
+
+  useEffect(() => {
+    const token = localStorage.getItem('sessionToken');
+    if (!token) { 
+      setStatus('logged_out'); 
+      return; 
+    }
+
+    api.get('/admin/projects')
+      .then(() => setStatus('logged_in'))
+      .catch(() => {
+        localStorage.removeItem('sessionToken');
+        setStatus('logged_out');
+      });
+  }, []);
+
+  if (status === 'checking') return null;
+  if (status === 'logged_in') return <Navigate to="/dashboard" replace />;
   return children;
 };
 
@@ -36,9 +65,10 @@ const App: React.FC = () => {
       >
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/project/:id" element={<ProtectedRoute><ProjectEditor /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><ProfileEditor /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Routes>
         </BrowserRouter>

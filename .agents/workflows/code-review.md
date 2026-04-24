@@ -14,21 +14,27 @@ Auditoría exhaustiva de calidad y seguridad para cualquier PR o commit en el st
   - `src/data/` → JSON generados (verificar estructura bilingüe)
 - Estimar el riesgo del cambio: bajo / medio / alto (cambios en auth, proxy Drive o pipeline = alto).
 
-### Paso 2 — Checklist Frontend (`frontend-expert.md`)
+### Paso 2 — Validación Técnica (Tipado y Sintaxis)
+- [ ] **Admin UI:** Ejecutar `npx tsc --noEmit` en `bridge/admin-ui/`. No debe haber errores de tipado.
+- [ ] **Bridge Backend:** Ejecutar `npx tsc --noEmit` en `bridge/`. No debe haber errores de compilación o tipado.
+- [ ] **Astro Frontend:** Ejecutar `npx astro check` en la raíz del proyecto. Validar que no existan errores de sintaxis en componentes `.astro`.
+- [ ] **Limpieza:** Verificar que no existan componentes o funciones importadas pero no utilizadas (Dead Code).
+
+### Paso 3 — Checklist Frontend (`frontend-expert.md`)
 - [ ] ¿Los estilos nuevos usan variables CSS de `:root` en `TranserOS.astro`?
 - [ ] ¿Los textos visibles están en `ui.ts` (Astro) o en las claves `i18next` del Admin? ¿Existen en ambos idiomas?
 - [ ] ¿Los componentes Astro nuevos son estáticos por defecto? ¿Se justifica cualquier `client:*`?
 - [ ] ¿Las imágenes usan `<Image />` de Astro con `loading="lazy"` donde corresponde?
 - [ ] ¿El drag & drop del Admin usa `@dnd-kit` y no una librería alternativa?
 
-### Paso 3 — Checklist Backend (`backend-expert.md`)
+### Paso 4 — Checklist Backend (`backend-expert.md`)
 - [ ] ¿Toda ruta nueva bajo `/api/admin/*` o `/api/file/*` tiene el middleware JWT como primer handler?
 - [ ] ¿Todas las queries SQLite usan `?` parametrizado? ¿Ninguna concatena strings del usuario?
 - [ ] ¿El manejo de errores usa la clase centralizada `AppError` y no expone stack traces?
 - [ ] ¿Las operaciones multi-tabla están en una transacción `BEGIN / COMMIT / ROLLBACK`?
 - [ ] ¿El streaming del proxy Drive usa `pipe`/streams sin acumular el archivo en memoria?
 
-### Paso 4 — Auditoría de Seguridad (`security-expert.md`)
+### Paso 5 — Auditoría de Seguridad (`security-expert.md`)
 
 > Esta es la fase de **mayor peso**. Si hay conflicto con los pasos anteriores, este paso tiene prioridad.
 

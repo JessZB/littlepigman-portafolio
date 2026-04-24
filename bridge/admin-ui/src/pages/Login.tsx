@@ -24,6 +24,7 @@ const Login: React.FC = () => {
       processedRef.current = true;
       localStorage.setItem('sessionToken', token);
       localStorage.setItem('artistId', artistId);
+      window.history.replaceState({}, document.title, window.location.pathname);
       navigate('/dashboard');
     }
 

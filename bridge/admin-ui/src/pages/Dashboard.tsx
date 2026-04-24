@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import api from '../api/client';
 import '../styles/theme.css';
 import './Dashboard.css';
-import { LayoutGrid, Plus, Send, ExternalLink, Trash2, LogOut, Settings } from 'lucide-react';
+import { LayoutGrid, Plus, Send, ExternalLink, Trash2, LogOut, Settings, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ProjectModal from '../components/ui/ProjectModal';
-import { Skeleton, IconButton, ToggleButtonGroup, ToggleButton, Box } from '@mui/material';
+import { Skeleton, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
 import type { DragEndEvent } from '@dnd-kit/core';
@@ -230,6 +230,9 @@ const Dashboard: React.FC = () => {
             <ToggleButton value="es">ES</ToggleButton>
             <ToggleButton value="en">EN</ToggleButton>
           </ToggleButtonGroup>
+          <button className="btn-secondary" onClick={() => navigate('/profile')} style={{ marginRight: '1rem' }}>
+             <User size={18} /> {t('nav.profile')}
+          </button>
           <button className="btn-secondary" onClick={() => setIsModalOpen(true)}>
              <Plus size={18} /> {t('project.new')}
           </button>

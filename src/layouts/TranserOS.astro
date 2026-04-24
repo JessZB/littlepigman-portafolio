@@ -4,7 +4,28 @@ interface Props {
   lang?: string;
 }
 
-const { title, lang = 'es' } = Astro.props;
+const { title: propTitle, lang = 'es' } = Astro.props;
+
+// Load Profile Data
+let profile;
+try {
+  const profileModule = await import(`../data/profile.${lang}.json`);
+  profile = profileModule.default;
+} catch (e) {
+  // Fallback to minimal data if not published yet
+  profile = {
+    version: "0.0",
+    meta: { site_title: "Transer OS", description: "Portfolio" },
+    theme: {
+      bg_deep: "#09000c", dark_purple: "#1c0217", panel_bg: "#311c48",
+      highlight: "#4c3f91", panel_border_glow: "#9145b6", panel_border: "#b958a5",
+      danger: "#ff5677", accent: "#ffea00"
+    }
+  };
+}
+
+const displayTitle = profile.meta?.site_title || `${propTitle} - Transer OS`;
+const favicon = profile.meta?.favicon_drive_id ? `http://localhost:3001/api/file/${profile.meta.favicon_drive_id}` : "/favicon.svg";
 ---
 
 <!doctype html>
@@ -15,7 +36,10 @@ const { title, lang = 'es' } = Astro.props;
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>{title} - Transer OS Portfolio</title>
+    <title>{displayTitle}</title>
+    <link rel="icon" type="image/x-icon" href={favicon} />
+    <meta name="description" content={profile.meta?.description} />
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com" is:inline></script>
     <!-- Fuente Pixelada -->
@@ -27,19 +51,28 @@ const { title, lang = 'es' } = Astro.props;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" is:inline></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" is:inline></script>
 
-    <style is:global>
+    <style is:global define:vars={{
+      bgDeep: profile.theme.bg_deep,
+      darkPurple: profile.theme.dark_purple,
+      panelBg: profile.theme.panel_bg,
+      highlight: profile.theme.highlight,
+      borderGlow: profile.theme.panel_border_glow,
+      borderMain: profile.theme.panel_border,
+      danger: profile.theme.danger,
+      accent: profile.theme.accent
+    }}>
       :root {
-        /* Paleta del Artista (Purple Theme) */
-        --color-bg-deep: #09000c;
-        --color-dark-purple: #1c0217;
-        --color-panel-bg: #311c48;
+        /* Paleta Dinámica */
+        --color-bg-deep: var(--bgDeep);
+        --color-dark-purple: var(--darkPurple);
+        --color-panel-bg: var(--panelBg);
 
-        --color-highlight: #4c3f91;
-        --color-panel-border-glow: #9145b6;
-        --color-panel-border: #b958a5;
+        --color-highlight: var(--highlight);
+        --color-panel-border-glow: var(--borderGlow);
+        --color-panel-border: var(--borderMain);
 
-        --color-danger: #ff5677;
-        --color-accent: rgb(255, 234, 0);
+        --color-danger: var(--danger);
+        --color-accent: var(--accent);
 
         --color-text-main: #ffffff;
         --color-text-muted: #e0b0d5;

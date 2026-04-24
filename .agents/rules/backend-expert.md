@@ -38,3 +38,7 @@ Este rol supervisa la lógica de negocio en Express, la integridad de la base de
 - **Tipificación:** Usar una clase de error central (`AppError`) con código HTTP y mensaje descriptivo interno, pero devolver al cliente solo el código HTTP y un mensaje genérico seguro.
 - **Stack traces:** Prohibido enviar stack traces al cliente en cualquier environment. Solo loggear internamente en development.
 - **Códigos HTTP semánticos:** `400` para inputs inválidos, `401` para no autenticado, `403` para no autorizado, `404` para recurso inexistente, `500` para errores internos inesperados.
+
+## 6. Integridad Técnica
+- **Tipado Estricto:** Obligatorio validar cambios con `npx tsc --noEmit`. El backend debe tener tipos definidos para todas las respuestas de la DB y payloads de requests. 
+- **Código Limpio:** Eliminar importaciones no utilizadas y variables muertas antes de cada commit.

@@ -39,3 +39,6 @@ Este rol garantiza la integridad visual retro-cyberpunk y la coherencia del sist
 - Cada página debe tener un único `<h1>` descriptivo. Respetar la jerarquía de encabezados.
 - Los elementos interactivos (botones, toggles) deben tener atributo `aria-label` cuando no contengan texto visible.
 - Puntuar ≥ 90 en Lighthouse Performance antes de considerar un componente listo para producción.
+
+## 5. Integridad Técnica
+- **Cero Errores de Tipado:** Todo cambio debe validar mediante `npx tsc --noEmit` (Admin UI) o `npx astro check`. No está permitido el uso de `any` injustificado o ignorar errores de TypeScript vía `@ts-ignore`.

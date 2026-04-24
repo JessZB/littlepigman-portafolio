@@ -7,9 +7,14 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "dev:all": "concurrently \"npm run dev\" \"cd bridge && npm run dev\" \"cd bridge/admin-ui && npm run dev\""
   },
   "dependencies": {
     "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.8",
+    "concurrently": "^9.2.1"
   }
 }

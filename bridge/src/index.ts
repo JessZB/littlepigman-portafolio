@@ -15,29 +15,40 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Rate Limiting (Disabled for Local Dev to prevent 429)
-/*
+// Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, 
-  max: 100, 
+  max: 1000, // Adjusted for typical CMS usage
   standardHeaders: true,
   legacyHeaders: false,
+  message: 'Too many requests from this IP, please try again after 15 minutes'
 });
-app.use(limiter);
-*/
+app.use('/api/', limiter);
 
 // Security & CORS Middlewares
 app.use(helmet({
-  crossOriginResourcePolicy: false, // Allow Drive images/models to be requested cross-origin
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  },
 }));
+
 const allowedOrigins = process.env.CORS_ORIGIN 
   ? process.env.CORS_ORIGIN.split(',') 
-  : ['http://localhost:4321'];
-if (!allowedOrigins.includes('http://localhost:5173')) {
-  allowedOrigins.push('http://localhost:5173');
-}
+  : ['http://localhost:4321', 'http://localhost:5173'];
+
 app.use(cors({
-  origin: true, // Allow any origin to connect (safe for local bridge, relies on JWT)
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
@@ -67,12 +78,14 @@ app.get('/api/test-drive', async (req: any, res: any) => {
     
     let html = '<h2>Archivos que el Bridge puede ver:</h2><ul>';
     for (const f of response.data.files || []) {
-      html += `<li><b>${f.name}</b> (ID: <code>${f.id}</code>) <br/> <a href="/api/file/${f.id}?artistId=${artistId}" target="_blank">Probar Proxy con este archivo</a></li>`;
+      const safeName = (f.name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      html += `<li><b>${safeName}</b> (ID: <code>${f.id}</code>) <br/> <a href="/api/file/${f.id}?artistId=${artistId}" target="_blank">Probar Proxy con este archivo</a></li>`;
     }
     html += '</ul>';
     res.send(html);
   } catch (err: any) {
-    res.status(500).send('Error Drive API: ' + err.message);
+    console.error('Test Drive Error:', err);
+    res.status(500).send('Error Drive API. Ver logs del servidor.');
   }
 });
 

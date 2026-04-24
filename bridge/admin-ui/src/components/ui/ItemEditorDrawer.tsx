@@ -1,6 +1,6 @@
 import React from 'react';
 import { Drawer, Box, Typography, TextField, Button, IconButton, ToggleButtonGroup, ToggleButton, CircularProgress } from '@mui/material';
-import { X, Save, Trash2, Globe, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, Save, Trash2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { extractDriveId } from '../../api/utils';
 import { useTranslation } from 'react-i18next';
 import api from '../../api/client';

@@ -8,7 +8,8 @@ const resources = {
       "nav": {
         "dashboard": "Panel de Control",
         "logout": "Cerrar Sesión",
-        "back": "Volver"
+        "back": "Volver",
+        "profile": "Perfil"
       },
       "common": {
         "save": "Guardar Cambios",
@@ -84,6 +85,69 @@ const resources = {
           "auth_failed": "Error de autenticación. Intenta de nuevo.",
           "default": "Ha ocurrido un problema al iniciar sesión."
         }
+      },
+      "profile": {
+        "title": "Perfil del Artista",
+        "subtitle": "Configura tu identidad digital y apariencia",
+        "tabs": {
+          "identity": "Identidad",
+          "appearance": "Apariencia",
+          "skills": "Habilidades",
+          "software": "Software",
+          "social": "Social",
+          "contact": "Contacto & SEO"
+        },
+        "identity": {
+          "avatar": "Avatar",
+          "level": "Nivel",
+          "class": "Clase",
+          "status": "Estatus",
+          "bio": "Biografía",
+          "avatar_hint": "Pega el enlace de Google Drive para tu imagen de perfil"
+        },
+        "appearance": {
+          "title": "Colores del Tema",
+          "preview": "Previsualización del Tema",
+          "hint": "Personaliza la paleta de colores para ajustar la atmósfera JRPG"
+        },
+        "skills": {
+          "title": "Habilidades y Parámetros",
+          "add": "Añadir Habilidad",
+          "name": "Nombre",
+          "value": "Valor (0-100)",
+          "style": "Estilo Visual",
+          "styles": {
+            "default": "Por defecto (Morado)",
+            "special": "Especial (Dorado)",
+            "ui": "UI/UX (Lila)"
+          }
+        },
+        "software": {
+          "title": "Herramientas de Trabajo",
+          "add": "Añadir Software",
+          "icon": "Icono (ID Drive)",
+          "color": "Color de Fondo"
+        },
+        "social": {
+          "title": "Redes de Comunicación",
+          "add": "Añadir Red",
+          "link": "Enlace",
+          "active": "Activa"
+        },
+        "contact": {
+          "email": "Email de contacto",
+          "comms_title": "Título de Sección",
+          "comms_desc": "Descripción de Sección",
+          "seo_title": "Título del Sitio (Browser)",
+          "favicon": "Favicon (ID Drive)"
+        },
+        "editor_lang": {
+          "label": "Modo de Edición",
+          "es": "Spanish (ES)",
+          "en": "English (EN)",
+          "dual": "Dual View"
+        },
+        "empty_state": "Aún no hay elementos. Haz clic en 'Añadir' para comenzar."
       }
     }
   },
@@ -92,7 +156,8 @@ const resources = {
       "nav": {
         "dashboard": "Dashboard",
         "logout": "Logout",
-        "back": "Back"
+        "back": "Back",
+        "profile": "Profile"
       },
       "common": {
         "save": "Save Changes",
@@ -103,7 +168,8 @@ const resources = {
         "edit": "Edit",
         "actions": "Actions",
         "loading": "Loading...",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "saved": "Saved successfully!"
       },
       "project": {
         "new": "New Project",
@@ -127,6 +193,7 @@ const resources = {
         }
       },
       "editor": {
+        "publish": "Publish Site",
         "sections": "Sections",
         "add_gallery": "Add Gallery",
         "add_3d": "Add 3D Model",
@@ -169,6 +236,69 @@ const resources = {
           "auth_failed": "Authentication failed. Please try again.",
           "default": "A problem occurred while signing in."
         }
+      },
+      "profile": {
+        "title": "Artist Profile",
+        "subtitle": "Set your digital identity and appearance",
+        "tabs": {
+          "identity": "Identity",
+          "appearance": "Appearance",
+          "skills": "Skills",
+          "software": "Software",
+          "social": "Social",
+          "contact": "Contact & SEO"
+        },
+        "identity": {
+          "avatar": "Avatar",
+          "level": "Level",
+          "class": "Class",
+          "status": "Status",
+          "bio": "Biography",
+          "avatar_hint": "Paste the Google Drive link for your profile picture"
+        },
+        "appearance": {
+          "title": "Theme Colors",
+          "preview": "Theme Preview",
+          "hint": "Customize the color palette to set the JRPG atmosphere"
+        },
+        "skills": {
+          "title": "Skills & Parameters",
+          "add": "Add Skill",
+          "name": "Name",
+          "value": "Value (0-100)",
+          "style": "Visual Style",
+          "styles": {
+            "default": "Default (Purple)",
+            "special": "Special (Gold)",
+            "ui": "UI/UX (Lilac)"
+          }
+        },
+        "software": {
+          "title": "Working Tools",
+          "add": "Add Software",
+          "icon": "Icon (Drive ID)",
+          "color": "Background Color"
+        },
+        "social": {
+          "title": "Communication Socials",
+          "add": "Add Social",
+          "link": "Link",
+          "active": "Active"
+        },
+        "contact": {
+          "email": "Contact Email",
+          "comms_title": "Section Title",
+          "comms_desc": "Section Description",
+          "seo_title": "Site Title (Browser)",
+          "favicon": "Favicon (Drive ID)"
+        },
+        "editor_lang": {
+          "label": "Editor Mode",
+          "es": "Spanish (ES)",
+          "en": "English (EN)",
+          "dual": "Dual View"
+        },
+        "empty_state": "No items yet. Click 'Add' to begin."
       }
     }
   }

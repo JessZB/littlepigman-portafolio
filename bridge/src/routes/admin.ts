@@ -1,11 +1,21 @@
 import { Router } from 'express';
 import db from '../db/metadata';
 import { verifySessionToken } from '../auth/session';
-import { generateWorksJson } from '../generator/buildJson';
+import { generateWorksJson, generateProfileJson } from '../generator/buildJson';
 import fs from 'fs';
 import path from 'path';
+import sanitizeHtml from 'sanitize-html';
 
 const router = Router();
+
+// Sanitization Helper
+const clean = (text: string | null | undefined) => {
+  if (!text) return text;
+  return sanitizeHtml(text, {
+    allowedTags: [], // Strip all tags by default for security
+    allowedAttributes: {}
+  });
+};
 
 // Middleware to verify Admin Session JWT
 router.use(verifySessionToken);
@@ -27,6 +37,20 @@ router.get('/profile', (req: any, res: any) => {
   res.json(artist);
 });
 
+// GET /api/admin/profile/full
+router.get('/profile/full', (req: any, res: any) => {
+  try {
+    const profile = db.prepare('SELECT * FROM artist_profiles WHERE artist_id = ?').get(req.artistId) || {};
+    const socials = db.prepare('SELECT * FROM artist_socials WHERE artist_id = ? ORDER BY sort_order ASC').all(req.artistId);
+    const software = db.prepare('SELECT * FROM artist_software WHERE artist_id = ? ORDER BY sort_order ASC').all(req.artistId);
+    const stats = db.prepare('SELECT * FROM artist_stats WHERE artist_id = ? ORDER BY sort_order ASC').all(req.artistId);
+    
+    res.json({ profile, socials, software, stats });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // POST /api/admin/profile/lang
 router.post('/profile/lang', (req: any, res: any) => {
   const { lang } = req.body;
@@ -34,6 +58,104 @@ router.post('/profile/lang', (req: any, res: any) => {
   try {
     db.prepare('UPDATE artists SET preferred_lang = ? WHERE id = ?').run(lang, req.artistId);
     res.json({ message: res.t('lang.updated') });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/admin/profile/identity
+router.post('/profile/identity', (req: any, res: any) => {
+  const { 
+    class_es, class_en, level, status_es, status_en, bio_es, bio_en, 
+    favicon_drive_id, avatar_drive_id, site_title_es, site_title_en,
+    seo_desc_es, seo_desc_en, contact_title_es, contact_title_en,
+    contact_desc_es, contact_desc_en, contact_email, theme_json
+  } = req.body;
+
+  try {
+    db.prepare(`
+      INSERT INTO artist_profiles (
+        artist_id, class_es, class_en, level, status_es, status_en, bio_es, bio_en, 
+        favicon_drive_id, avatar_drive_id, site_title_es, site_title_en,
+        seo_desc_es, seo_desc_en, contact_title_es, contact_title_en,
+        contact_desc_es, contact_desc_en, contact_email, theme_json
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(artist_id) DO UPDATE SET
+        class_es=excluded.class_es, class_en=excluded.class_en, level=excluded.level,
+        status_es=excluded.status_es, status_en=excluded.status_en, bio_es=excluded.bio_es, bio_en=excluded.bio_en,
+        favicon_drive_id=excluded.favicon_drive_id, avatar_drive_id=excluded.avatar_drive_id,
+        site_title_es=excluded.site_title_es, site_title_en=excluded.site_title_en,
+        seo_desc_es=excluded.seo_desc_es, seo_desc_en=excluded.seo_desc_en,
+        contact_title_es=excluded.contact_title_es, contact_title_en=excluded.contact_title_en,
+        contact_desc_es=excluded.contact_desc_es, contact_desc_en=excluded.contact_desc_en,
+        contact_email=excluded.contact_email, theme_json=excluded.theme_json
+    `).run(
+      req.artistId, clean(class_es), clean(class_en), level, clean(status_es), clean(status_en), clean(bio_es), clean(bio_en),
+      favicon_drive_id, avatar_drive_id, clean(site_title_es), clean(site_title_en),
+      clean(seo_desc_es), clean(seo_desc_en), clean(contact_title_es), clean(contact_title_en),
+      clean(contact_desc_es), clean(contact_desc_en), contact_email, theme_json
+    );
+    res.json({ success: true, message: 'Identity updated' });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/admin/profile/socials
+router.post('/profile/socials', (req: any, res: any) => {
+  const { socials } = req.body;
+  if (!Array.isArray(socials)) return res.status(400).send('Invalid request');
+  try {
+    const deleteStmt = db.prepare('DELETE FROM artist_socials WHERE artist_id = ?');
+    const insertStmt = db.prepare('INSERT INTO artist_socials (id, artist_id, name, link, icon_drive_id, active, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    const transaction = db.transaction((items) => {
+      deleteStmt.run(req.artistId);
+      items.forEach((item: any, idx: number) => {
+        insertStmt.run(item.id || `soc_${Date.now()}_${idx}`, req.artistId, item.name, item.link, item.icon_drive_id, item.active ? 1 : 0, idx);
+      });
+    });
+    transaction(socials);
+    res.json({ success: true });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/admin/profile/software
+router.post('/profile/software', (req: any, res: any) => {
+  const { software } = req.body;
+  if (!Array.isArray(software)) return res.status(400).send('Invalid request');
+  try {
+    const deleteStmt = db.prepare('DELETE FROM artist_software WHERE artist_id = ?');
+    const insertStmt = db.prepare('INSERT INTO artist_software (id, artist_id, name, icon_drive_id, color, sort_order) VALUES (?, ?, ?, ?, ?, ?)');
+    const transaction = db.transaction((items) => {
+      deleteStmt.run(req.artistId);
+      items.forEach((item: any, idx: number) => {
+        insertStmt.run(item.id || `sw_${Date.now()}_${idx}`, req.artistId, item.name, item.icon_drive_id, item.color, idx);
+      });
+    });
+    transaction(software);
+    res.json({ success: true });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/admin/profile/stats
+router.post('/profile/stats', (req: any, res: any) => {
+  const { stats } = req.body;
+  if (!Array.isArray(stats)) return res.status(400).send('Invalid request');
+  try {
+    const deleteStmt = db.prepare('DELETE FROM artist_stats WHERE artist_id = ?');
+    const insertStmt = db.prepare('INSERT INTO artist_stats (id, artist_id, name_es, name_en, value, css_class, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    const transaction = db.transaction((items) => {
+      deleteStmt.run(req.artistId);
+      items.forEach((item: any, idx: number) => {
+        insertStmt.run(item.id || `st_${Date.now()}_${idx}`, req.artistId, item.name_es, item.name_en, item.value, item.css_class, idx);
+      });
+    });
+    transaction(stats);
+    res.json({ success: true });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
@@ -63,9 +185,9 @@ router.post('/projects', (req: any, res: any) => {
         role_es=excluded.role_es, role_en=excluded.role_en,
         description_es=excluded.description_es, description_en=excluded.description_en
     `).run(
-      id, req.artistId, title_es, title_en, category, 
-      thumbnail_drive_id, role_es, role_en, 
-      description_es, description_en
+      id, req.artistId, clean(title_es), clean(title_en), category, 
+      thumbnail_drive_id, clean(role_es), clean(role_en), 
+      clean(description_es), clean(description_en)
     );
     
     res.json({ message: res.t('project.saved'), id });
@@ -110,7 +232,7 @@ router.post('/sections', (req: any, res: any) => {
         type=excluded.type, title_es=excluded.title_es, title_en=excluded.title_en,
         description_es=excluded.description_es, description_en=excluded.description_en,
         sort_order=excluded.sort_order, model_drive_id=excluded.model_drive_id
-    `).run(id, project_id, type, title_es, title_en, description_es, description_en, sort_order || 0, model_drive_id || null);
+    `).run(id, project_id, type, clean(title_es), clean(title_en), clean(description_es), clean(description_en), sort_order || 0, model_drive_id || null);
     
     res.json({ message: res.t('section.saved'), id });
   } catch (err: any) {
@@ -147,7 +269,7 @@ router.post('/items', async (req: any, res: any) => {
         title_es=excluded.title_es, title_en=excluded.title_en,
         description_es=excluded.description_es, description_en=excluded.description_en,
         drive_file_id=excluded.drive_file_id, sort_order=excluded.sort_order
-    `).run(id, section_id, title_es || null, title_en || null, description_es || null, description_en || null, drive_file_id || null, sort_order || 0);
+    `).run(id, section_id, clean(title_es), clean(title_en), clean(description_es), clean(description_en), drive_file_id || null, sort_order || 0);
     
     res.json({ message: res.t('item.saved'), id });
   } catch (err: any) {
@@ -246,15 +368,23 @@ router.post('/publish', (req: any, res: any) => {
     const jsonEs = generateWorksJson(req.artistId, 'es');
     const jsonEn = generateWorksJson(req.artistId, 'en');
     
+    const profileEs = generateProfileJson(req.artistId, 'es');
+    const profileEn = generateProfileJson(req.artistId, 'en');
+    
     // Absolute path to Astro project's data folder
     const dataPath = path.resolve(__dirname, '../../../src/data');
     
     if (fs.existsSync(dataPath)) {
+      // Works
       fs.writeFileSync(path.join(dataPath, 'works.es.json'), JSON.stringify(jsonEs, null, 2));
       fs.writeFileSync(path.join(dataPath, 'works.en.json'), JSON.stringify(jsonEn, null, 2));
+      
+      // Profiles (if exist)
+      if (profileEs) fs.writeFileSync(path.join(dataPath, 'profile.es.json'), JSON.stringify(profileEs, null, 2));
+      if (profileEn) fs.writeFileSync(path.join(dataPath, 'profile.en.json'), JSON.stringify(profileEn, null, 2));
     }
     
-    res.json({ success: true, message: 'works.es.json and works.en.json published to Astro' });
+    res.json({ success: true, message: 'Projects and Profile published to Astro' });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
