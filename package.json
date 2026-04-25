@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "dev:all": "concurrently \"npm run dev\" \"cd bridge && npm run dev\" \"cd bridge/admin-ui && npm run dev\""
+    "setup:agents": "node setup-agents.js"
   },
   "dependencies": {
     "astro": "^5.0.0"

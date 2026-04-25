@@ -1,6 +1,6 @@
 # Workflow: Revisión de Código (`/review`)
 
-Auditoría de calidad y seguridad para el portfolio Astro.
+Auditoría de calidad y seguridad para el portfolio Astro
 
 ---
 
