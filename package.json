@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "setup:agents": "node _shared_agents/common/setup-agents.js"
+    "setup:agents": "git submodule update --init --recursive && node _shared_agents/common/setup-agents.js",
+    "postinstall": "npm run setup:agents"
   },
   "dependencies": {
     "astro": "^5.0.0"
